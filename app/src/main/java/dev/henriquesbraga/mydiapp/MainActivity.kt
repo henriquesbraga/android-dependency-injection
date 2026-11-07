@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import dagger.hilt.android.AndroidEntryPoint
 import dev.henriquesbraga.mydiapp.repository.PostsRepository
 import dev.henriquesbraga.mydiapp.ui.pages.HomeViewModel
 import dev.henriquesbraga.mydiapp.ui.pages.HomeWithViewModel
@@ -23,25 +24,10 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    val client: HttpClient by lazy {
-        HttpClient(OkHttp) {
-            expectSuccess = true
-
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                })
-            }
-
-            install(HttpTimeout) {
-                requestTimeoutMillis = 30_000
-                connectTimeoutMillis = 15_000
-                socketTimeoutMillis = 30_000
-            }
-        }
-    }
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +35,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MydiappTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val homeViewModel: HomeViewModel by viewModels {
-                        HomeViewModel.factory(repository = PostsRepository(client = client))
-                    }
                     HomeWithViewModel(
                         modifier = Modifier.padding(innerPadding),
                         viewModel = homeViewModel

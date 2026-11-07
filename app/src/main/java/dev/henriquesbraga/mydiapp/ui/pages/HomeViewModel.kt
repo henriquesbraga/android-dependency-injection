@@ -2,17 +2,18 @@ package dev.henriquesbraga.mydiapp.ui.pages
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.henriquesbraga.mydiapp.repository.PostsRepository
 import dev.henriquesbraga.mydiapp.ui.state.HomeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
-class HomeViewModel (
+@HiltViewModel
+class HomeViewModel @Inject constructor (
     private val repository: PostsRepository
 ) : ViewModel() {
 
@@ -40,16 +41,4 @@ class HomeViewModel (
             }
         }
     }
-
-
-
-    companion object {
-
-        fun factory(repository: PostsRepository) = viewModelFactory {
-            initializer {
-                HomeViewModel(repository = repository)
-            }
-        }
-    }
-
 }
