@@ -1,11 +1,9 @@
 package dev.henriquesbraga.mydiapp.ui.pages
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import dev.henriquesbraga.mydiapp.MyApplication
 import dev.henriquesbraga.mydiapp.repository.PostsRepository
 import dev.henriquesbraga.mydiapp.ui.state.HomeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,18 +43,13 @@ class HomeViewModel (
 
 
 
-
-
     companion object {
-        val Factory = viewModelFactory {
+
+        fun factory(repository: PostsRepository) = viewModelFactory {
             initializer {
-                val application = this[
-                    ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY
-                ] as MyApplication
-                HomeViewModel(repository = application.appContainer.postsRepository)
+                HomeViewModel(repository = repository)
             }
         }
     }
-
 
 }
